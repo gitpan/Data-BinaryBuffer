@@ -61,7 +61,7 @@
    "provides" : {
       "Data::BinaryBuffer" : {
          "file" : "lib/Data/BinaryBuffer.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -72,11 +72,11 @@
       "homepage" : "https://metacpan.org/release/Data-BinaryBuffer",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/dagolden/data-binarybuffer.git",
-         "web" : "https://github.com/dagolden/data-binarybuffer"
+         "url" : "git://github.com/vovkasm/data-binarybuffer.git",
+         "web" : "https://github.com/vovkasm/data-binarybuffer"
       }
    },
-   "version" : "0.001",
+   "version" : "0.002",
    "x_authority" : "cpan:VOVKASM"
 }
 

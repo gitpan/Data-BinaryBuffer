@@ -30,7 +30,7 @@ no_index:
 provides:
   Data::BinaryBuffer:
     file: lib/Data/BinaryBuffer.pm
-    version: 0.001
+    version: 0.002
 requires:
   XSLoader: 0
   perl: 5.006
@@ -39,6 +39,6 @@ requires:
 resources:
   bugtracker: https://github.com/vovkasm/data-binarybuffer/issues
   homepage: https://metacpan.org/release/Data-BinaryBuffer
-  repository: git://github.com/dagolden/data-binarybuffer.git
-version: 0.001
+  repository: git://github.com/vovkasm/data-binarybuffer.git
+version: 0.002
 x_authority: cpan:VOVKASM

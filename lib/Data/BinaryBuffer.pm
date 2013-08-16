@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # ABSTRACT: The module to work with binary data effectively
-our $VERSION = '0.001'; # VERSION
+our $VERSION = '0.002'; # VERSION
 
 require XSLoader;
 XSLoader::load('Data::BinaryBuffer', $VERSION);
@@ -22,7 +22,7 @@ Data::BinaryBuffer - The module to work with binary data effectively
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -169,9 +169,9 @@ You will be notified automatically of any progress on your issue.
 This is open source software.  The code repository is available for
 public review and contribution under the terms of the license.
 
-L<https://github.com/dagolden/data-binarybuffer>
+L<https://github.com/vovkasm/data-binarybuffer>
 
-  git clone git://github.com/dagolden/data-binarybuffer.git
+  git clone git://github.com/vovkasm/data-binarybuffer.git
 
 =head1 AUTHOR
 
