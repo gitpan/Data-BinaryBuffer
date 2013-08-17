@@ -61,7 +61,7 @@
    "provides" : {
       "Data::BinaryBuffer" : {
          "file" : "lib/Data/BinaryBuffer.pm",
-         "version" : "0.002"
+         "version" : "0.003"
       }
    },
    "release_status" : "stable",
@@ -76,7 +76,7 @@
          "web" : "https://github.com/vovkasm/data-binarybuffer"
       }
    },
-   "version" : "0.002",
+   "version" : "0.003",
    "x_authority" : "cpan:VOVKASM"
 }
 
