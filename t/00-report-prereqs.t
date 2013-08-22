@@ -11,7 +11,9 @@ use List::Util qw/max/;
 
 my @modules = qw(
   Capture::Tiny
+  ExtUtils::CBuilder
   ExtUtils::MakeMaker
+  File::Spec
   File::Spec::Functions
   File::Temp
   List::Util

@@ -14,16 +14,14 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "The module to work with binary data effectively",
   "AUTHOR" => "Vladimir Timofeev <vovkasm\@gmail.com>",
   "BUILD_REQUIRES" => {},
-  "CCFLAGS" => "-fno-strict-aliasing -pipe -fstack-protector -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -x c++",
   "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => "6.30"
+    "ExtUtils::CBuilder" => 0,
+    "ExtUtils::MakeMaker" => "6.30",
+    "File::Spec" => 0,
+    "File::Temp" => 0
   },
   "DISTNAME" => "Data-BinaryBuffer",
   "EXE_FILES" => [],
-  "LDDLFLAGS" => "-shared -O3 -march=native -g -L/usr/local/lib -fstack-protector",
-  "LIBS" => [
-    "-lstdc++"
-  ],
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.006",
   "NAME" => "Data::BinaryBuffer",
@@ -41,10 +39,7 @@ my %WriteMakefileArgs = (
     "Test::More" => "0.88",
     "blib" => 0
   },
-  "TYPEMAPS" => [
-    "perlobject.map"
-  ],
-  "VERSION" => "0.003",
+  "VERSION" => "0.004",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -79,6 +74,72 @@ unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+use Config ();
+use Text::ParseWords 'shellwords';
+use inc::CConf;
+
+$WriteMakefileArgs{CONFIGURE} = sub {
+    my %args;
+
+    my $c = inc::CConf->new(config_file=>'binarybuffer-config.h');
+
+    $c->need_cplusplus;
+    $c->need_stl;
+
+    my $test_sys_endian_h = <<"ENDCODE";
+#include <sys/endian.h>
+int main() { return 0; }
+ENDCODE
+    my $test_endian_h = <<"ENDCODE";
+#include <endian.h>
+int main() { return 0; }
+ENDCODE
+
+    $c->try_build(
+        on_error => sub { die "Can't find hto* funtions on this platform" },
+        try => [
+            {
+                code => $test_sys_endian_h,
+                defs => { HAS_SYS_ENDIAN_H => 1 },
+            },
+            {
+                code => $test_endian_h,
+                defs => { HAS_ENDIAN_H => 1 },
+            }
+        ]
+    );
+
+    my $test_original_endian_macros = <<"ENDCODE";
+#include "binarybuffer-config.h"
+#if defined(HAS_ENDIAN_H)
+    #include <endian.h>
+#elif defined(HAS_SYS_ENDIAN_H)
+    #include <sys/endian.h>
+#endif
+int main() {
+    int val = betoh32(htobe32(0x11223344));
+    return 0;
+}
+ENDCODE
+    $c->try_build(
+        on_error => sub { },
+        try => [
+            {
+                code => $test_original_endian_macros,
+                defs => { HAS_ORIGINAL_ENDIAN_MACROS => 1 },
+            }
+        ]
+    );
+
+    $c->generate_config_file;
+
+    %args = $c->makemaker_args;
+
+    $args{TYPEMAPS} = ['perlobject.map'];
+
+    return \%args;
+};
 
 WriteMakefile(%WriteMakefileArgs);
 
