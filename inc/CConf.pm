@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use ExtUtils::CBuilder;
 use File::Spec ();
-use File::Temp ();
 
 sub new {
     my $class = shift;
@@ -99,30 +98,41 @@ sub try_build {
     my $on_error = $args{on_error};
     my $try_list = $args{try} || [{}];
 
+    my $test_file = "cconftest.c";
+
     foreach my $try_args (@$try_list) {
         $self->generate_config_file(%$try_args);
 
         my $code = $args{code} || $try_args->{code};
         die "try_build: code argument required" unless $code;
-        
-        my $fh = File::Temp->new(DIR => File::Spec->curdir, SUFFIX => '.c'); # same as file created from .xs
-        $fh->print($code);
 
-        my %compile_args = $self->cbuilder_compile_args(source => $fh->filename, %$try_args);
+        open my $fh, ">", $test_file or die("Can't write $test_file: $!");
+        print $fh $code;
+        close $fh;
+        
+        my %compile_args = $self->cbuilder_compile_args(source => $test_file, %$try_args);
         my $obj = eval { $self->{cbuilder}->compile(%compile_args) };
-        next unless $obj;
+        unless ($obj) {
+            unlink $test_file;
+            next;
+        }
+
         my %link_args = $self->cbuilder_linker_args(objects => $obj, %$try_args);
         my $exe = eval { $self->{cbuilder}->link_executable(%link_args); };
         unless ($exe) {
+            unlink $test_file;
             unlink $obj;
             next;
         }
-        unless (system($exe) == 0) {
+        my $exe_path = File::Spec->catfile(File::Spec->curdir, $exe);
+        unless (system($exe_path) == 0) {
+            unlink $test_file;
             unlink $obj;
             unlink $exe;
             next;
         }
 
+        unlink $test_file;
         unlink $obj;
         unlink $exe;
         $self->merge_args(%$try_args);
@@ -151,8 +161,9 @@ ENDCODE
     $self->try_build(
         on_error => sub { die "Can't build C++ program on this platform" },
         try => [
-            {ccflags=>['-xc++']},
-            {ccflags=>['-TP']}
+            {ccflags=>['-xc++'],libs=>['stdc++']},
+            {ccflags=>['-xc++'],libs=>['c++']},
+            {ccflags=>['-TP','-EHsc'],ldflags=>['msvcprt.lib']}
         ],
         code => $code
     );
@@ -173,10 +184,6 @@ ENDCODE
 
     $self->try_build(
         on_error => sub { die "Can't build C++ program with STL on this platform" },
-        try => [
-            {libs=>['stdc++']},
-            {libs=>['c++']}
-        ],
         code => $code
     );
 }

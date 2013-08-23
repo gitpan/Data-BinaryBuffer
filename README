@@ -2,7 +2,7 @@ NAME
     Data::BinaryBuffer - The module to work with binary data effectively
 
 VERSION
-    version 0.004
+    version 0.005
 
 SYNOPSIS
         use Data::BinaryBuffer;

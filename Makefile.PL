@@ -17,8 +17,7 @@ my %WriteMakefileArgs = (
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::CBuilder" => 0,
     "ExtUtils::MakeMaker" => "6.30",
-    "File::Spec" => 0,
-    "File::Temp" => 0
+    "File::Spec" => 0
   },
   "DISTNAME" => "Data-BinaryBuffer",
   "EXE_FILES" => [],
@@ -39,7 +38,7 @@ my %WriteMakefileArgs = (
     "Test::More" => "0.88",
     "blib" => 0
   },
-  "VERSION" => "0.004",
+  "VERSION" => "0.005",
   "test" => {
     "TESTS" => "t/*.t"
   }

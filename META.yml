@@ -14,7 +14,6 @@ configure_requires:
   ExtUtils::CBuilder: 0
   ExtUtils::MakeMaker: 6.30
   File::Spec: 0
-  File::Temp: 0
 dynamic_config: 0
 generated_by: 'Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.132140'
 license: perl
@@ -33,7 +32,7 @@ no_index:
 provides:
   Data::BinaryBuffer:
     file: lib/Data/BinaryBuffer.pm
-    version: 0.004
+    version: 0.005
 requires:
   XSLoader: 0
   perl: 5.006
@@ -43,5 +42,5 @@ resources:
   bugtracker: https://github.com/vovkasm/data-binarybuffer/issues
   homepage: https://metacpan.org/release/Data-BinaryBuffer
   repository: git://github.com/vovkasm/data-binarybuffer.git
-version: 0.004
+version: 0.005
 x_authority: cpan:VOVKASM
